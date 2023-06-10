@@ -15,7 +15,7 @@
  * 
  */
 
-namespace DayKoala\inventory;
+namespace codeeeh\korr\libs\koala\inventory;
 
 use pocketmine\network\mcpe\protocol\types\inventory\WindowTypes;
 
@@ -23,16 +23,13 @@ use pocketmine\block\tile\Chest;
 use pocketmine\block\tile\NormalFurnace;
 use pocketmine\block\tile\Hopper;
 
-use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\VanillaBlocks;
 
-use DayKoala\inventory\utils\WindowUtils;
-
-use DayKoala\inventory\tile\CustomWindow;
-
-use DayKoala\block\BlockEntityMetadata;
-
-use DayKoala\inventory\tile\FurnaceWindow;
-use DayKoala\inventory\tile\DoubleChestWindow;
+use codeeeh\korr\libs\koala\inventory\utils\WindowUtils;
+use codeeeh\korr\libs\koala\inventory\tile\CustomWindow;
+use codeeeh\korr\libs\koala\block\BlockEntityMetadata;
+use codeeeh\korr\libs\koala\inventory\tile\FurnaceWindow;
+use codeeeh\korr\libs\koala\inventory\tile\DoubleChestWindow;
 
 final class WindowFactory{
 
@@ -47,10 +44,10 @@ final class WindowFactory{
     private function __construct(){
         WindowUtils::init();
 
-        $this->register(WindowIds::CHEST, new CustomWindow(WindowTypes::CONTAINER, 27, new BlockEntityMetadata(Chest::class, BlockLegacyIds::CHEST)));
-        $this->register(WindowIds::DOUBLE_CHEST, new DoubleChestWindow(WindowTypes::CONTAINER, 54, new BlockEntityMetadata(Chest::class, BlockLegacyIds::CHEST)));
-        $this->register(WindowIds::HOPPER, new CustomWindow(WindowTypes::HOPPER, 5, new BlockEntityMetadata(Hopper::class, BlockLegacyIds::HOPPER_BLOCK)));
-        $this->register(WindowIds::FURNACE, new FurnaceWindow(WindowTypes::FURNACE, 3, new BlockEntityMetadata(NormalFurnace::class, BlockLegacyIds::FURNACE)));
+        $this->register(WindowIds::CHEST, new CustomWindow(WindowTypes::CONTAINER, 27, new BlockEntityMetadata(Chest::class, VanillaBlocks::CHEST())));
+        $this->register(WindowIds::DOUBLE_CHEST, new DoubleChestWindow(WindowTypes::CONTAINER, 54, new BlockEntityMetadata(Chest::class, VanillaBlocks::CHEST())));
+        $this->register(WindowIds::HOPPER, new CustomWindow(WindowTypes::HOPPER, 5, new BlockEntityMetadata(Hopper::class, VanillaBlocks::HOPPER())));
+        $this->register(WindowIds::FURNACE, new FurnaceWindow(WindowTypes::FURNACE, 3, new BlockEntityMetadata(NormalFurnace::class, VanillaBlocks::FURNACE())));
     }
 
     public function exists(String $id) : Bool{
