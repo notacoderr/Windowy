@@ -15,12 +15,11 @@
  * 
  */
 
-namespace DayKoala\block;
+namespace codeeeh\korr\libs\koala\block;
 
 use pocketmine\block\tile\TileFactory;
 use pocketmine\block\tile\Tile;
 
-use pocketmine\block\BlockFactory;
 use pocketmine\block\Block;
 
 use pocketmine\math\Vector3;
@@ -29,21 +28,21 @@ use pocketmine\world\Position;
 
 use pocketmine\nbt\tag\CompoundTag;
 
+use pocketmine\network\mcpe\convert\TypeConverter;
+
 use pocketmine\network\mcpe\protocol\UpdateBlockPacket;
 use pocketmine\network\mcpe\protocol\BlockActorDataPacket;
 
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 
-use pocketmine\network\mcpe\convert\RuntimeBlockMapping;
-
 class BlockEntityMetadata{
 
     protected $tile, $block;
 
-    public function __construct(String $tile, Int $id, Int $meta = 0){
+    public function __construct(string $tile, Block $block) {
+        $this->block = $block;
         $this->tile = TileFactory::getInstance()->getSaveId($tile);
-        $this->block = BlockFactory::getInstance()->get($id, $meta);
     }
 
     public function create(Vector3 $pos, ?Vector3 $pair = null, ?String $name = null) : Array{
@@ -83,8 +82,15 @@ class BlockEntityMetadata{
         return $nbt;
     }
 
-    protected function writeBlock(Vector3 $pos, Block $block) : UpdateBlockPacket{
-        return UpdateBlockPacket::create(BlockPosition::fromVector3($pos), RuntimeBlockMapping::getInstance()->toRuntimeId($block->getFullId()), UpdateBlockPacket::FLAG_NETWORK,  UpdateBlockPacket::DATA_LAYER_NORMAL);
+    protected function writeBlock(Vector3 $pos, Block $block) : UpdateBlockPacket {
+		$translator = TypeConverter::getInstance()->getBlockTranslator();
+		
+        return UpdateBlockPacket::create(
+			BlockPosition::fromVector3($pos),
+			$translator->internalIdToNetworkId($block->getStateId()),
+			UpdateBlockPacket::FLAG_NETWORK,
+			UpdateBlockPacket::DATA_LAYER_NORMAL
+		);
     }
 
     protected function writeActor(Vector3 $pos, ?Vector3 $pair = null, ?String $name = null) : BlockActorDataPacket{
